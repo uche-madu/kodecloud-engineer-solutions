@@ -1,0 +1,25 @@
+---
+- name: Stratos Datacenter Server Installations
+  hosts: app_servers
+  become: yes
+  tasks:
+    - name: Ensure user thor exists
+      user:
+        name: thor
+        state: present
+        create_home: yes
+        shell: /bin/bash
+    - name: Ensure .ssh directory exists
+      file:
+        path: "~/.ssh"
+        state: directory
+        mode: "0700"
+    - name: Copy public key to authorized_keys
+      authorized_key:
+        user: thor
+        state: present
+        key: "{{ lookup('file', '/home/thor/.ssh/id_rsa.pub')  }}"
+    - name: Install zip on all servers
+      yum:
+        name: zip
+        state: present 
