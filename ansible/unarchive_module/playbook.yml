@@ -1,0 +1,25 @@
+- name: Unzip and set permissions for devops.zip
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy devops.zip to app servers
+      copy:
+        src: /usr/src/security/devops.zip
+        dest: /tmp/devops.zip
+    - name: Ensure /opt/security/ directory exists
+      file:
+        path: /opt/security/
+        state: directory
+    - name: Unzip /tmp/devops.zip in /opt/security/
+      unarchive:
+        src: /tmp/devops.zip
+        dest: /opt/security
+        remote_src: yes
+    - name: Set ownership and permissions for extracted data
+      file:
+        path: /opt/security/
+        state: directory
+        recurse: yes
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
