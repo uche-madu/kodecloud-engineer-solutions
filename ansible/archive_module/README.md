@@ -12,9 +12,9 @@ Create a playbook named `playbook.yml` under `/home/thor/ansible` directory on `
 Details of users and servers are available [here](https://kodekloudhub.github.io/kodekloud-engineer/docs/projects/nautilus#infrastructure-details)
 
 ##Solution
-* Create the playbook.yaml file and edit the `inventory` file as per the `inventory` in this repo (add user_owner variable to each server). This is the more scalable approach.
-* Alternatively, leave the inventory file as unedited and create the playbook.yaml file as provided with some changes as follows:
-- ``` - name: Set user and group ownership based on ansible_host
+* Create the playbook.yml file and edit the `inventory` file as per the `inventory` in this repo (add user_owner variable to each server). This is the more scalable approach.
+* Alternatively, leave the inventory file unedited and create the playbook.yml file as provided with some changes as follows:
+ ``` - name: Set user and group ownership based on ansible_host
       ansible.builtin.file:
         path: /opt/dba/demo.tar.gz
         owner: "{{ 'tony' if '172.16.238.10' in ansible_host else 'steve' if '172.16.238.11' in ansible_host else 'banner' }}"
