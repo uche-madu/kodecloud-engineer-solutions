@@ -20,3 +20,24 @@ Create a `playbook.yml` under `/home/thor/ansible/` directory on `jump host` its
 
 
 `Note:` Validation will try to run the playbook using command `ansible-playbook -i inventory playbook.yml` so please make sure playbook works this way, without passing any extra arguments.
+
+
+## Solution
+As a simpler alternative to the playbook available in `playbook.yml`, the `unarchive` module can handle it all like so:
+
+```
+---
+- name: Extract and Set Permissions for devops.zip
+  hosts: all
+  become: yes
+  tasks:
+    - name: Unzip /usr/src/security/devops.zip in /opt/security/ on app servers
+      ansible.builtin.unarchive:
+        src: /usr/src/security/devops.zip
+        dest: /opt/security/
+        remote_src: no
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+```
