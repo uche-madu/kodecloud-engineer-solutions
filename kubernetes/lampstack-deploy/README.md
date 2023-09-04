@@ -1,3 +1,5 @@
+
+## Problem Statement
 The Nautilus DevOps team want to deploy a PHP website on Kubernetes cluster. They are going to use Apache as a web server and Mysql for database. The team had already gathered the requirements and now they want to make this website live. Below you can find more details:
 
 
@@ -38,15 +40,16 @@ The Nautilus DevOps team want to deploy a PHP website on Kubernetes cluster. The
 
 * Run `kubectl apply -f configmap.yaml -f lamp.yaml -f lamp-service.yaml -f mysql-service.yaml`
 
-* Create Secrets
-```bash
-kubectl create secret generic mysql-secrets \
-  --from-literal=MYSQL_ROOT_PASSWORD=r00t \
-  --from-literal=MYSQL_DATABASE=kodekloud-lamp-db \
-  --from-literal=MYSQL_USER=thor \
-  --from-literal=MYSQL_PASSWORD=s3cr3tpassw0rd \
-  --from-literal=MYSQL_HOST=mysql-service
-```
+* Create Secrets:
+
+    ```bash
+    kubectl create secret generic mysql-secrets \
+      --from-literal=MYSQL_ROOT_PASSWORD=r00t \
+      --from-literal=MYSQL_DATABASE=kodekloud-lamp-db \
+      --from-literal=MYSQL_USER=thor \
+      --from-literal=MYSQL_PASSWORD=s3cr3tpassw0rd \
+      --from-literal=MYSQL_HOST=mysql-service
+    ```
 
 * Copy the provided `/tmp/index.php` into the apache server container (replace container name)
 `kubectl cp /tmp/index.php lamp-wp-xxxxxxxxxx-xxxxx:/app/index.php -c httpd-php-container`
