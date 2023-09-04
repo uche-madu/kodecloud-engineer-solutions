@@ -18,4 +18,4 @@ Create a node port type service named `web-datacenter` using node port `30008` t
     `kubectl apply -f pv.yaml -f pvc.yaml -f pod.yaml -f pv-service.yaml`
 
 `Note:` As per the instructions, "volume type should be `hostPath` and set path to `/mnt/data` (this directory is already created, you might not be able to access it directly, so you need not to worry about it)", the webpage may not be available. It shows a 403 error.
- 
+
