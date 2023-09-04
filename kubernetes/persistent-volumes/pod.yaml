@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: pod-datacenter
+  labels:
+    app: web
+spec:
+  volumes:
+    - name: web-data
+      persistentVolumeClaim:
+        claimName: pvc-datacenter
+  containers:
+    - name: container-datacenter
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: web-data
+          mountPath: /usr/share/nginx/html
