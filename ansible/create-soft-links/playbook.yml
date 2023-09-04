@@ -1,0 +1,34 @@
+- name: Create Soft Links on All App Servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create empty file /opt/sysops/blog.txt and set owner
+      ansible.builtin.file:
+        path: /opt/sysops/blog.txt
+        owner: tony
+        group: tony
+        state: touch
+      when: inventory_hostname == "stapp01"
+    
+    - name: Create empty file /opt/sysops/story.txt and set owner
+      ansible.builtin.file:
+        path: /opt/sysops/story.txt
+        owner: steve
+        group: steve
+        state: touch
+      when: inventory_hostname == "stapp02"
+    
+    - name: Create empty file /opt/sysops/media.txt and set owner
+      ansible.builtin.file:
+        path: /opt/sysops/media.txt
+        owner: banner
+        group: banner
+        state: touch
+      when: inventory_hostname == "stapp03"
+
+    - name: Create symbolic link from /opt/sysops to /var/www/html
+      ansible.builtin.file:
+        src: /opt/sysops
+        dest: /var/www/html
+        state: link
+      when: inventory_hostname in ["stapp01", "stapp02", "stapp03"]
