@@ -1,0 +1,14 @@
+--- 
+- name: Install vsftpd on all app servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install vsftpd
+      yum:
+        name: vsftpd
+        state: present
+    - name: Ensure vsftpd is enabled
+      systemd:
+        name: vsftpd
+        state: started
+        enabled: true
