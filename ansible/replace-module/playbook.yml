@@ -1,0 +1,23 @@
+---
+- name: Replace strings in files on each app server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Replace text in blog.txt on app server 1
+      replace:
+        path: /opt/data/blog.txt
+        regexp: xFusionCorp
+        replace: Nautilus
+      when: inventory_hostname == "stapp01"
+    - name: Replace text in story.txt on app server 2
+      replace:
+        path: /opt/data/story.txt
+        regexp: Nautilus
+        replace: KodeKloud
+      when: inventory_hostname == "stapp02"
+    - name: Replace text in media.txt on app server 3
+      replace:
+        path: /opt/data/media.txt
+        regexp: KodeKloud
+        replace: xFusionCorp Industries
+      when: inventory_hostname == "stapp03"
