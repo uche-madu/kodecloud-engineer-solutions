@@ -1,0 +1,28 @@
+---
+- name: Setup Apache web server and create sample html page
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Create facts.txt with system architecture
+      blockinfile:
+        path: /root/facts.txt
+        create: yes
+        block: |
+          Ansible managed node architecture is {{ ansible_architecture }}
+
+    - name: Install httpd server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Copy facts.txt to index.html
+      copy:
+        src: /root/facts.txt
+        dest: /var/www/html/index.html
+        remote_src: yes
+
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
