@@ -1,0 +1,62 @@
+--- 
+- name: Create users and groups in app server 3
+  hosts: stapp03
+  become: yes
+  tasks:
+    - name: Include users from data directory
+      include_vars:
+        file: ~/playbooks/data/users.yml
+
+    - name: Include encrypted passwords from secrets directory
+      include_vars:
+        dir: /home/thor/playbooks/secrets/
+        files_matching: _password.yml
+      no_log: true
+    
+    - name: Ensure pip is installed
+      package:
+        name: python3-pip
+        state: present
+
+    - name: Install passlib using pip for encrypting the passwords
+      pip:
+        name: passlib
+        state: present
+
+    - name: Hash admin password
+      command:
+        cmd: "python3 -c 'from passlib.hash import sha512_crypt; print(sha512_crypt.hash(\"{{ admin_password }}\"))'"
+      register: admin_hashed_password
+      changed_when: false
+
+    - name: Hash developer password
+      command:
+        cmd: "python3 -c 'from passlib.hash import sha512_crypt; print(sha512_crypt.hash(\"{{ developer_password }}\"))'"
+      register: developer_hashed_password
+      changed_when: false  
+    
+    - name: Add admin and developer groups
+      group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - admins
+        - developers
+    
+    - name: Add admin users with default home directories and set hashed password
+      user:
+        name: "{{ item }}"
+        group: admins
+        groups: wheel
+        state: present
+        password: "{{ admin_hashed_password.stdout }}"
+      loop: "{{ admins }}"
+    
+    - name: Add developer users with /var/www home directory and set hashed password
+      user:
+        name: "{{ item }}"
+        group: developers
+        state: present
+        home: "/var/www/{{ item }}"
+        password: "{{ developer_hashed_password.stdout }}"
+      loop: "{{ developers }}"
