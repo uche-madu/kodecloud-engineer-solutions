@@ -1,0 +1,7 @@
+---
+- name: Managing Jinja2 Templates
+  hosts: stapp02
+  become: yes
+  become_user: root
+  roles:
+    - role/httpd

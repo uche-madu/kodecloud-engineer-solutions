@@ -1,0 +1,22 @@
+---
+# tasks file for role/test
+
+- name: install the latest version of HTTPD
+  yum:
+    name: httpd
+    state: latest
+
+- name: Start service httpd
+  service:
+    name: httpd
+    state: started
+
+# TO DO:
+- name: Copy index.html template
+  template:
+    src: ../templates/index.html.j2
+    dest: /var/www/html/index.html
+    mode: '0744'
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+  become: yes
