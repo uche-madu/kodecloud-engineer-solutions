@@ -1,0 +1,31 @@
+---
+- name: Copy files to App Servers with specific conditions
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copy blog.txt to App Server 1
+      copy:
+        src: /usr/src/sysops/blog.txt
+        dest: /opt/sysops/blog.txt
+        owner: tony
+        group: tony
+        mode: '0655'
+      when: inventory_hostname == 'stapp01'
+
+    - name: Copy story.txt to App Server 2
+      copy:
+        src: /usr/src/sysops/story.txt
+        dest: /opt/sysops/story.txt
+        owner: steve
+        group: steve
+        mode: '0655'
+      when: inventory_hostname == 'stapp02'
+
+    - name: Copy media.txt to App Server 3
+      copy:
+        src: /usr/src/sysops/media.txt
+        dest: /opt/sysops/media.txt
+        owner: banner
+        group: banner
+        mode: '0655'
+      when: inventory_hostname == 'stapp03'

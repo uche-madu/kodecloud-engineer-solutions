@@ -1,0 +1,37 @@
+---
+- name: Setup Apache and PHP on AppServer2
+  hosts: stapp02
+  become: yes
+  tasks:
+    - name: Install httpd and php
+      yum:
+        name: 
+          - httpd
+          - php
+        state: latest
+    
+    - name: Ensure /var/www/html/myroot exists
+      file:
+        path: /var/www/html/myroot
+        state: directory
+        owner: apache
+        group: apache
+    
+    - name: Change default document root in Apache config
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^DocumentRoot'
+        line: 'DocumentRoot "/var/www/html/myroot"'
+    
+    - name: Copy phpinfo.php template
+      template:
+        src: ~/playbooks/templates/phpinfo.php.j2
+        dest: /var/www/html/myroot/phpinfo.php
+        owner: apache
+        group: apache
+
+    - name: Start and enable httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: yes
